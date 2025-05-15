@@ -125,16 +125,19 @@ const GameBoard: FC<GameBoardProps> = ({ players, currentPlayerId }) => {
       {/* Player Tokens */}
       {players.map((player) => {
         const coords = getSquareCoordinates(player.position);
-        // Token size relative to cell size, e.g., 60% of cell width
-        const tokenSize = `max(1.5rem, ${cellSizePercentage * 0.006 * 100}vmin)`; 
+        // Token size in pixels. 1.5rem is approx 24px.
+        // Using a fixed pixel value here to avoid NaN issues with parseFloat on complex CSS units.
+        // A more sophisticated responsive calculation could be done in useEffect if needed.
+        const numericTokenSizePx = 24; 
         return (
           <PlayerToken
             key={player.id}
             playerName={player.name}
             playerColorClass={player.id === 'player1' ? 'token-p1' : 'token-p2'}
             position={coords}
-            size={parseFloat(tokenSize)} // This needs a fixed number or better calculation
+            size={numericTokenSizePx}
             isCurrentPlayer={player.id === currentPlayerId}
+            cellSizePercentage={cellSizePercentage}
           />
         );
       })}
